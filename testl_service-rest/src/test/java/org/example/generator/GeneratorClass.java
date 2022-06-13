@@ -28,8 +28,8 @@ import java.util.regex.Matcher;
  */
 public class GeneratorClass {
 
-    // 开发人员 必改 1
-    static String author = "huopengbo";
+    // 开发人员 必改 112
+    static String author = "huopengbo1";
     // 基础包路径 必改
     static String basePackage = "org.example";
     // 表名称 必改

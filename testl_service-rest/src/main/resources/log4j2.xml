@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="off" monitorInterval="30" packages="biz.paluch.logging.gelf.log4j2">
+
+    <properties>
+        <property name="FILE_NAME">testl_service-rest</property>
+    </properties>
+    <CustomLevels>
+        <CustomLevel name="myLevel" intLevel="99" />
+    </CustomLevels>
+
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout charset="UTF-8" pattern="%d{HH:mm:ss.SSS} [%traceId] [%thread] %-5level %logger{36} - %msg%n"/>
+            <filters>
+                <ThresholdFilter level="WARN" onMatch="ACCEPT"/>
+                <ThresholdFilter level="ERROR" onMatch="ACCEPT"/>
+            </filters>
+        </Console>
+
+        <Gelf name="Graylog" host="udp:${env:GRAYLOG_IP}" port="${env:GRAYLOG_PORT}" version="1.1"
+              originHost="${env:HOSTNAME}"
+              maximumMessageSize="10000"
+              ignoreExceptions="true" facility="java">
+            <Field name="className" pattern="%c"/>
+            <Field name="line" pattern="%L"/>
+            <Field name="thread" pattern="%thread"/>
+            <filters>
+                <ThresholdFilter level="WARN" onMatch="ACCEPT"/>
+                <ThresholdFilter level="ERROR" onMatch="ACCEPT"/>
+            </filters>
+        </Gelf>
+
+        <RollingRandomAccessFile name="appender-default" fileName="${env:LOG_HOME}/default.log"
+                                 filePattern="${env:LOG_HOME}/default.log.%d{yyyy-MM-dd}">
+            <PatternLayout charset="UTF-8" pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} [%traceId] %level [%c:%line] - %msg%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="50">
+                <Delete basePath="${env:LOG_HOME}" maxDepth="2">
+                    <IfFileName glob="*default.log.*"/>
+                    <IfLastModified age="7d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingRandomAccessFile>
+
+        <RollingRandomAccessFile name="appender-service" fileName="${env:LOG_HOME}/testl_service-rest.log"
+                                 filePattern="${env:LOG_HOME}/testl_service-rest.log.%d{yyyy-MM-dd}-%i">
+            <PatternLayout charset="UTF-8" pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} [%traceId] %level [%c:%line] - %msg%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="50">
+                <Delete basePath="${env:LOG_HOME}" maxDepth="2">
+                    <IfFileName glob="*micro-servce.log.*"/>
+                    <IfLastModified age="7d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+            <filters>
+            </filters>
+        </RollingRandomAccessFile>
+
+        <RollingRandomAccessFile name="appender-startup" fileName="${env:LOG_HOME}/startup.log"
+                                 filePattern="${env:LOG_HOME}/startup.log.%d{yyyy-MM-dd}">
+            <PatternLayout charset="UTF-8" pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} [%traceId] %level [%c:%line] - %msg%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="50">
+                <Delete basePath="${env:LOG_HOME}" maxDepth="2">
+                    <IfFileName glob="*startup.log.*"/>
+                    <IfLastModified age="7d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingRandomAccessFile>
+
+        <RollingRandomAccessFile name="appender-slow-sql" fileName="${env:LOG_HOME}/db-slow-sql.log"
+                                 filePattern="${env:LOG_HOME}/db-slow-sql.log.%d{yyyy-MM-dd}">
+            <PatternLayout charset="UTF-8" pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} [%traceId] %level [%c:%line] - %msg%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+            </Policies>
+        </RollingRandomAccessFile>
+
+
+        <RollingRandomAccessFile name="ERROR_LOG" fileName="${env:LOG_HOME}/common-error.log"
+                                 filePattern="${env:LOG_HOME}/common-error.log.%d{yyyy-MM-dd}">
+            <PatternLayout charset="UTF-8" pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} [%traceId] %level [%c:%line] - %msg%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="50">
+                <Delete basePath="${env:LOG_HOME}" maxDepth="2">
+                    <IfFileName glob="*common-error.log.*"/>
+                    <IfLastModified age="7d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+            <filters>
+                <ThresholdFilter level="ERROR" onMatch="ACCEPT"/>
+            </filters>
+        </RollingRandomAccessFile>
+
+        <RollingRandomAccessFile name="WARN_LOG" fileName="${env:LOG_HOME}/common-warn.log"
+                                 filePattern="${env:LOG_HOME}/common-warn.log.%d{yyyy-MM-dd}">
+            <PatternLayout charset="UTF-8" pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} [%traceId] %level [%c:%line] - %msg%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="50">
+                <Delete basePath="${env:LOG_HOME}" maxDepth="2">
+                    <IfFileName glob="*common-warn.log.*"/>
+                    <IfLastModified age="7d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+            <filters>
+                <ThresholdFilter level="WARN" onMatch="ACCEPT"/>
+            </filters>
+        </RollingRandomAccessFile>
+
+    </Appenders>
+
+    <Loggers>
+        <AsyncLogger name="org.example" level="INFO">
+            <AppenderRef ref="appender-service"/>
+        </AsyncLogger>
+
+        <AsyncLogger name="STARTUP" level="INFO">
+            <AppenderRef ref="appender-startup"/>
+        </AsyncLogger>
+
+        <AsyncLogger name="SLOW-SQL" level="INFO">
+            <AppenderRef ref="appender-slow-sql"/>
+        </AsyncLogger>
+
+        <AsyncRoot level="debug">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="appender-default"/>
+            <AppenderRef ref="ERROR_LOG"/>
+            <AppenderRef ref="WARN_LOG"/>
+            <AppenderRef ref="Graylog"/>
+        </AsyncRoot>
+
+    </Loggers>
+</Configuration>

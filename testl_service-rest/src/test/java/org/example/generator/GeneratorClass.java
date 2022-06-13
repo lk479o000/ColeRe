@@ -28,7 +28,7 @@ import java.util.regex.Matcher;
  */
 public class GeneratorClass {
 
-    // 开发人员 必改 112
+    // 开发人员 必改 1 2
     static String author = "huopengbo1";
     // 基础包路径 必改
     static String basePackage = "org.example";
